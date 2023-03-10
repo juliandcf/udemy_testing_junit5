@@ -1,5 +1,7 @@
 package org.testing.junit5.examples.models;
 
+import org.testing.junit5.examples.exceptions.NotEnoughMoneyException;
+
 import java.math.BigDecimal;
 
 public class Account {
@@ -28,7 +30,11 @@ public class Account {
     }
 
     public void debit(BigDecimal amount) {
-        balance = balance.subtract(amount);
+        BigDecimal newBalance = balance.subtract(amount);
+        if (newBalance.compareTo(BigDecimal.ZERO) < 0)
+            throw new NotEnoughMoneyException("There is not enough money in the account");
+
+        this.balance = newBalance;
     }
 
     public void credit(BigDecimal amount) {
