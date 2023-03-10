@@ -1,6 +1,7 @@
 package org.testing.junit5.examples;
 
 import org.junit.jupiter.api.Test;
+import org.testing.junit5.examples.models.Account;
 
 import java.math.BigDecimal;
 

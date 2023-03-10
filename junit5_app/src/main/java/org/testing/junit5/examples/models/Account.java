@@ -1,7 +1,6 @@
-package org.testing.junit5.examples;
+package org.testing.junit5.examples.models;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public class Account {
     private String person;
