@@ -81,26 +81,25 @@ class AccountTest {
         bank.addAccount(account2);
 
         bank.transfer(account1, account2, new BigDecimal(500));
-        assertEquals("3000", account2.getBalance().toPlainString());
-        assertEquals("1000", account1.getBalance().toPlainString());
 
-        assertEquals(2, bank.getAccounts().size());
-        assertEquals("Fake Bank", account1.getBank().getName());
-        assertEquals("Julian", bank.getAccounts().stream()
-                .filter(account -> account.getPerson().equals("Julian"))
-                .findFirst()
-                .get()
-                .getPerson());
-
-        assertTrue(bank.getAccounts().stream()
-                .filter(account -> account.getPerson().equals("Julian"))
-                .findFirst()
-                .isPresent());
-
-        assertTrue(bank.getAccounts().stream()
-                .anyMatch(account -> account.getPerson().equals("Julian")));
-
-        assertTrue(bank.getAccounts().stream()
-                .anyMatch(account -> account.getPerson().equals("Jhon Doe")));
+        assertAll(
+                () -> assertEquals("3000", account2.getBalance().toPlainString()),
+                () -> assertEquals("1000", account1.getBalance().toPlainString()),
+                () -> assertEquals(2, bank.getAccounts().size()),
+                () -> assertEquals("Fake Bank", account1.getBank().getName()),
+                () -> assertEquals("Julian", bank.getAccounts().stream()
+                        .filter(account -> account.getPerson().equals("Julian"))
+                        .findFirst()
+                        .get()
+                        .getPerson()),
+                () -> assertTrue(bank.getAccounts().stream()
+                        .filter(account -> account.getPerson().equals("Julian"))
+                        .findFirst()
+                        .isPresent()),
+                () -> assertTrue(bank.getAccounts().stream()
+                        .anyMatch(account -> account.getPerson().equals("Julian"))),
+                () -> assertTrue(bank.getAccounts().stream()
+                        .anyMatch(account -> account.getPerson().equals("Jhon Doe")))
+        );
     }
 }
