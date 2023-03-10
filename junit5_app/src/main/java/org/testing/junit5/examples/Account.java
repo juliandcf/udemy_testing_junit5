@@ -1,6 +1,7 @@
 package org.testing.junit5.examples;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Account {
     private String person;
@@ -25,5 +26,21 @@ public class Account {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public void debit(BigDecimal amount) {
+        balance = balance.subtract(amount);
+    }
+
+    public void credit(BigDecimal amount) {
+        balance = balance.add(amount);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return person.equals(account.person) && balance.equals(account.balance);
     }
 }
