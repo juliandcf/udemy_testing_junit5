@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.*;
 
 class AccountTest {
 
@@ -152,5 +153,14 @@ class AccountTest {
     @EnabledIfEnvironmentVariable(named = "DESKTOP_SESSION", matches = "ubuntu")
     void testDesktopSessionEnv() {
 
+    }
+
+    @Test
+    @DisplayName("Test that the balance is set correctly in the account only when the server is dev")
+    void test_balanceAccountDev() {
+        boolean isDev = "dev".equals(System.getProperty("ENV"));
+        assumeTrue(isDev);
+        assertEquals(1000.12345, account.getBalance().doubleValue());
+        assertFalse(account.getBalance().compareTo(BigDecimal.ZERO) < 0);
     }
 }
