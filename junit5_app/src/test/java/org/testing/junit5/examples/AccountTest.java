@@ -3,11 +3,14 @@ package org.testing.junit5.examples;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.*;
 import org.testing.junit5.examples.exceptions.NotEnoughMoneyException;
 import org.testing.junit5.examples.models.Account;
 import org.testing.junit5.examples.models.Bank;
 
 import java.math.BigDecimal;
+import java.util.Map;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -113,5 +116,41 @@ class AccountTest {
                 () -> assertTrue(bank.getAccounts().stream()
                         .anyMatch(account -> account.getPerson().equals("Jhon Doe")))
         );
+    }
+
+    @Test
+    @EnabledOnOs(OS.WINDOWS)
+    void testOnlyWindows(){
+
+    }
+
+    @Test
+    @EnabledOnOs(OS.LINUX)
+    void testOnlyLinux(){
+
+    }
+
+    @Test
+    void printSystemProperties() {
+        Properties properties = System.getProperties();
+        properties.forEach((k,v) -> System.out.println(k + ":" + v));
+    }
+
+    @Test
+    void printEnvVariables() {
+        Map<String, String> envs = System.getenv();
+        envs.forEach((k,v) -> System.out.println(k + ":" + v));
+    }
+
+    @Test
+    @EnabledIfSystemProperty(named = "java.version", matches = "17.0.2")
+    void testJavaVersionProperties() {
+
+    }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "DESKTOP_SESSION", matches = "ubuntu")
+    void testDesktopSessionEnv() {
+
     }
 }
