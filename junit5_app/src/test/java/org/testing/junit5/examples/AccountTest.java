@@ -1,5 +1,6 @@
 package org.testing.junit5.examples;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.testing.junit5.examples.exceptions.NotEnoughMoneyException;
@@ -12,10 +13,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AccountTest {
 
+    Account account;
+
+    @BeforeEach
+    void beforeEach() {
+        this.account = new Account("Julian", new BigDecimal("1000.12345"));
+    }
+
     @Test
     @DisplayName("Test that the name is set correctly in the account")
     void test_nameAccount() {
-        Account account = new Account("Julian", new BigDecimal("1000.12345"));
         String expected = "Julian";
         assertEquals(expected, account.getPerson(), () -> "the name must be equals");
     }
@@ -23,7 +30,6 @@ class AccountTest {
     @Test
     @DisplayName("Test that the balance is set correctly in the account")
     void test_balanceAccount() {
-        Account account = new Account("Julian", new BigDecimal("1000.12345"));
         assertEquals(1000.12345, account.getBalance().doubleValue());
         assertFalse(account.getBalance().compareTo(BigDecimal.ZERO) < 0);
     }
@@ -39,7 +45,6 @@ class AccountTest {
     @Test
     @DisplayName("Test account debit money")
     void test_accountDebit() {
-        Account account = new Account("Julian", new BigDecimal("1000.12345"));
         account.debit(new BigDecimal(100));
         assertNotNull(account.getBalance());
         assertEquals(900, account.getBalance().intValue());
@@ -49,7 +54,6 @@ class AccountTest {
     @Test
     @DisplayName("Test account credit money")
     void test_accountCredit() {
-        Account account = new Account("Julian", new BigDecimal("1000.12345"));
         account.credit(new BigDecimal(100));
         assertNotNull(account.getBalance());
         assertEquals(1100, account.getBalance().intValue());
@@ -59,7 +63,6 @@ class AccountTest {
     @Test
     @DisplayName("Tests the case of a debit greater than the amount of money in the account")
     void test_notEnoughMoneyException() {
-        Account account = new Account("Julian", new BigDecimal("1000.12345"));
         Exception exception = assertThrows(NotEnoughMoneyException.class, () -> {
             account.debit(new BigDecimal("2000"));
         });
