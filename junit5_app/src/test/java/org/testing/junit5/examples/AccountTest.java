@@ -6,16 +6,20 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.*;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.testing.junit5.examples.exceptions.NotEnoughMoneyException;
 import org.testing.junit5.examples.models.Account;
 import org.testing.junit5.examples.models.Bank;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.stream.Stream;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -181,7 +185,7 @@ class AccountTest {
     @Nested
     class ParametrizedTest {
 
-        @RepeatedTest(value=5, name = "Repeticion numero {currentRepetition} de {totalRepetitions}")
+        @RepeatedTest(value = 5, name = "Repeticion numero {currentRepetition} de {totalRepetitions}")
         @DisplayName("Test account debit money repeated")
         void test_accountDebitRepeated(RepetitionInfo info) {
             System.out.println(info.getCurrentRepetition());
@@ -226,6 +230,23 @@ class AccountTest {
 
         static List<String> montoList() {
             return List.of("100", "200", "300", "400", "500");
+        }
+
+    }
+
+    @Nested
+    class TimeoutTests {
+        @Test
+        @Timeout(value = 1, unit = TimeUnit.SECONDS)
+        void testTimeout() throws InterruptedException {
+            TimeUnit.SECONDS.sleep(2);
+        }
+
+        @Test
+        void testTimeoutAssertion() {
+            assertTimeout(Duration.ofSeconds(5l), ()->{
+                TimeUnit.MILLISECONDS.sleep(5500);
+            });
         }
 
     }
