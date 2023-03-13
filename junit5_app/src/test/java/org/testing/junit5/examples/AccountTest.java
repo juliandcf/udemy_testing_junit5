@@ -33,7 +33,8 @@ class AccountTest {
     class AccountPropertiesTest {
         @Test
         @DisplayName("Test that the name is set correctly in the account")
-        void test_nameAccount() {
+        void test_nameAccount(TestInfo testInfo, TestReporter testReporter) {
+            testReporter.publishEntry("preuba test report: " + testInfo.getDisplayName());
             String expected = "Julian";
             assertEquals(expected, account.getPerson(), () -> "the name must be equals");
         }
@@ -176,6 +177,7 @@ class AccountTest {
         }
     }
 
+    @Tag("param")
     @Nested
     class ParametrizedTest {
 
