@@ -5,13 +5,17 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.*;
 import org.testing.junit5.examples.exceptions.NotEnoughMoneyException;
 import org.testing.junit5.examples.models.Account;
 import org.testing.junit5.examples.models.Bank;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -80,16 +84,6 @@ class AccountTest {
             });
             String messageExpected = "There is not enough money in the account";
             assertEquals(messageExpected, exception.getMessage());
-        }
-
-        @RepeatedTest(value=5, name = "Repeticion numero {currentRepetition} de {totalRepetitions}")
-        @DisplayName("Test account debit money repeated")
-        void test_accountDebitRepeated(RepetitionInfo info) {
-            System.out.println(info.getCurrentRepetition());
-            account.debit(new BigDecimal(100));
-            assertNotNull(account.getBalance());
-            assertEquals(900, account.getBalance().intValue());
-            assertEquals("900.12345", account.getBalance().toPlainString());
         }
     }
 
@@ -180,5 +174,57 @@ class AccountTest {
             assertEquals(1000.12345, account.getBalance().doubleValue());
             assertFalse(account.getBalance().compareTo(BigDecimal.ZERO) < 0);
         }
+    }
+
+    @Nested
+    class ParametrizedTest {
+
+        @RepeatedTest(value=5, name = "Repeticion numero {currentRepetition} de {totalRepetitions}")
+        @DisplayName("Test account debit money repeated")
+        void test_accountDebitRepeated(RepetitionInfo info) {
+            System.out.println(info.getCurrentRepetition());
+            account.debit(new BigDecimal(100));
+            assertNotNull(account.getBalance());
+            assertEquals(900, account.getBalance().intValue());
+            assertEquals("900.12345", account.getBalance().toPlainString());
+        }
+
+        @ParameterizedTest(name = "numero {index} ejecutando con valor {0} - {argumentsWithNames}")
+        @ValueSource(strings = {"100", "200", "300", "500", "1000"})
+        void test_accountDebitParametrizedValueSource(String amount) {
+            account.debit(new BigDecimal(amount));
+            assertNotNull(account.getBalance());
+            assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+        }
+
+        @ParameterizedTest(name = "numero {index} ejecutando con valor {0} - {argumentsWithNames}")
+        @CsvSource({"1,100", "2,200", "3,300", "4,500", "5,1000"})
+        void test_accountDebitParametrizedCsvSource(String index, String amount) {
+            System.out.println(index + "->" + amount);
+            account.debit(new BigDecimal(amount));
+            assertNotNull(account.getBalance());
+            assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+        }
+
+        @ParameterizedTest(name = "numero {index} ejecutando con valor {0} - {argumentsWithNames}")
+        @CsvFileSource(resources = "/data.csv")
+        void test_accountDebitParametrizedCsvFileSource(String amount) {
+            account.debit(new BigDecimal(amount));
+            assertNotNull(account.getBalance());
+            assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+        }
+
+        @ParameterizedTest(name = "numero {index} ejecutando con valor {0} - {argumentsWithNames}")
+        @MethodSource("montoList")
+        void test_accountDebitParametrizedMethodSource(String amount) {
+            account.debit(new BigDecimal(amount));
+            assertNotNull(account.getBalance());
+            assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+        }
+
+        static List<String> montoList() {
+            return List.of("100", "200", "300", "400", "500");
+        }
+
     }
 }
