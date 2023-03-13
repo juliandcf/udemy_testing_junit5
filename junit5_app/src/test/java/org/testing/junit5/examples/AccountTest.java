@@ -1,9 +1,6 @@
 package org.testing.junit5.examples;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledOnOs;
@@ -83,6 +80,16 @@ class AccountTest {
             });
             String messageExpected = "There is not enough money in the account";
             assertEquals(messageExpected, exception.getMessage());
+        }
+
+        @RepeatedTest(value=5, name = "Repeticion numero {currentRepetition} de {totalRepetitions}")
+        @DisplayName("Test account debit money repeated")
+        void test_accountDebitRepeated(RepetitionInfo info) {
+            System.out.println(info.getCurrentRepetition());
+            account.debit(new BigDecimal(100));
+            assertNotNull(account.getBalance());
+            assertEquals(900, account.getBalance().intValue());
+            assertEquals("900.12345", account.getBalance().toPlainString());
         }
     }
 
