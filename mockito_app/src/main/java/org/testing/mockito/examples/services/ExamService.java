@@ -2,7 +2,9 @@ package org.testing.mockito.examples.services;
 
 import org.testing.mockito.examples.models.Exam;
 
+import java.util.Optional;
+
 public interface ExamService {
 
-    Exam findExamByName(String name);
+    Optional<Exam> findExamByName(String name);
 }
