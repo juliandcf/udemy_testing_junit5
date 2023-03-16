@@ -1,35 +1,34 @@
 package org.testing.mockito.examples.services;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.testing.mockito.examples.models.Exam;
 import org.testing.mockito.examples.repositories.ExamRepository;
 import org.testing.mockito.examples.repositories.QuestionRepository;
 import org.testing.mockito.examples.utils.Data;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class ExamServiceImplTest {
 
+    @Mock
     ExamRepository examRepository;
 
+    @Mock
     QuestionRepository questionRepository;
 
-    ExamService examService;
-
-    @BeforeEach
-    void setUp() {
-        examRepository = mock(ExamRepository.class);
-        questionRepository = mock(QuestionRepository.class);
-        examService = new ExamServiceImpl(examRepository, questionRepository);
-    }
+    @InjectMocks
+    ExamServiceImpl examService;
 
     @Test
     void findExamByName() {
