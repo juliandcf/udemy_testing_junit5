@@ -14,9 +14,8 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ExamServiceImplTest {
@@ -31,7 +30,7 @@ class ExamServiceImplTest {
     ExamServiceImpl examService;
 
     @Test
-    void findExamByName() {
+    void testFindExamByName() {
 
         when(examRepository.findAll()).thenReturn(Data.EXAMS);
 
@@ -41,7 +40,7 @@ class ExamServiceImplTest {
     }
 
     @Test
-    void findExamByNameEmptyList() {
+    void testFindExamByNameEmptyList() {
         when(examRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
 
         Optional<Exam> exam = examService.findExamByName("matematica");
@@ -49,7 +48,7 @@ class ExamServiceImplTest {
     }
 
     @Test
-    void findExamByNameWithQuestions() {
+    void testFindExamByNameWithQuestions() {
         when(examRepository.findAll()).thenReturn(Data.EXAMS);
         when(questionRepository.findByQuestionId(anyLong())).thenReturn(Data.QUESTIONS);
 
@@ -60,7 +59,7 @@ class ExamServiceImplTest {
     }
 
     @Test
-    void findExamByNameWithQuestionsVerify() {
+    void testFindExamByNameWithQuestionsVerify() {
         when(examRepository.findAll()).thenReturn(Data.EXAMS);
         when(questionRepository.findByQuestionId(anyLong())).thenReturn(Data.QUESTIONS);
 
@@ -70,5 +69,27 @@ class ExamServiceImplTest {
         assertEquals(5, exam.getQuestions().size());
         verify(examRepository).findAll();
         verify(questionRepository).findByQuestionId(anyLong());
+    }
+
+    @Test
+    void testExamWithQuestionsSave() {
+        when(examRepository.save(any())).thenReturn(Data.EXAM_WITHOUT_QUESTIONS);
+        Exam exam = examService.save(Data.EXAM_WITH_QUESTIONS);
+        assertNotNull(exam.getId());
+        assertEquals(8l, exam.getId());
+        assertEquals("fisica", exam.getName());
+        verify(examRepository).save(any(Exam.class));
+        verify(questionRepository).saveQuestions(anyList());
+    }
+
+    @Test
+    void testExamWithoutQuestionsSave() {
+        when(examRepository.save(any())).thenReturn(Data.EXAM_WITHOUT_QUESTIONS);
+        Exam exam = examService.save(Data.EXAM_WITHOUT_QUESTIONS);
+        assertNotNull(exam.getId());
+        assertEquals(8l, exam.getId());
+        assertEquals("fisica", exam.getName());
+        verify(examRepository).save(any(Exam.class));
+        verify(questionRepository, never()).saveQuestions(anyList());
     }
 }
