@@ -1,9 +1,10 @@
 package org.testing.mockito.examples.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Exam {
+public class Exam implements Serializable {
 
     private Long id;
     private String name;

@@ -1,10 +1,13 @@
 package org.testing.mockito.examples.services;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import org.testing.mockito.examples.models.Exam;
 import org.testing.mockito.examples.repositories.ExamRepository;
 import org.testing.mockito.examples.repositories.QuestionRepository;
@@ -91,5 +94,29 @@ class ExamServiceImplTest {
         assertEquals("fisica", exam.getName());
         verify(examRepository).save(any(Exam.class));
         verify(questionRepository, never()).saveQuestions(anyList());
+    }
+
+    @Test
+    void testExamWithoutQuestionsSaveAutoincrementMock() {
+        //Data.EXAM_WITHOUT_QUESTIONS
+        when(examRepository.save(any())).then(new Answer<Exam>() {
+
+            Long secuenceId = 1l;
+
+            @Override
+            public Exam answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Exam exam = invocationOnMock.getArgument(0);
+                exam.setId(secuenceId++);
+                return exam;
+            }
+        });
+        // clone objet to test increment id with answers
+        Exam exam1 = examService.save((Exam) SerializationUtils.clone(Data.EXAM_WITHOUT_QUESTIONS));
+        Exam exam2 = examService.save((Exam) SerializationUtils.clone(Data.EXAM_WITHOUT_QUESTIONS));
+
+        assertNotNull(exam1.getId());
+        assertNotNull(exam2.getId());
+        assertEquals(1l, exam1.getId());
+        assertEquals(2l, exam2.getId());
     }
 }
