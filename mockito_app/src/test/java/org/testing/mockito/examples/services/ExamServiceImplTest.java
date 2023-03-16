@@ -59,4 +59,17 @@ class ExamServiceImplTest {
         assertEquals(5l, exam.getId());
         assertEquals(5, exam.getQuestions().size());
     }
+
+    @Test
+    void findExamByNameWithQuestionsVerify() {
+        when(examRepository.findAll()).thenReturn(Data.EXAMS);
+        when(questionRepository.findByQuestionId(anyLong())).thenReturn(Data.QUESTIONS);
+
+        Exam exam = examService.findExamByNameWithQuestions("matematica");
+        assertNotNull(exam);
+        assertEquals(5l, exam.getId());
+        assertEquals(5, exam.getQuestions().size());
+        verify(examRepository).findAll();
+        verify(questionRepository).findByQuestionId(anyLong());
+    }
 }
