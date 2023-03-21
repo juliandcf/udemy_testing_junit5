@@ -9,7 +9,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.testing.mockito.examples.models.Exam;
 import org.testing.mockito.examples.repositories.ExamRepository;
+import org.testing.mockito.examples.repositories.ExamRepositoryImpl;
 import org.testing.mockito.examples.repositories.QuestionRepository;
+import org.testing.mockito.examples.repositories.QuestionRepositoryImpl;
 import org.testing.mockito.examples.utils.Data;
 
 import java.util.Collections;
@@ -26,7 +28,13 @@ class ExamServiceImplTest {
     ExamRepository examRepository;
 
     @Mock
+    ExamRepositoryImpl examRepositoryImpl;
+
+    @Mock
     QuestionRepository questionRepository;
+
+    @Mock
+    QuestionRepositoryImpl questionRepositoryImpl;
 
     @InjectMocks
     ExamServiceImpl examService;
@@ -205,7 +213,6 @@ class ExamServiceImplTest {
     @Test
     void testDoAnswer() {
         when(examRepository.findAll()).thenReturn(Data.EXAMS);
-        //  when(questionRepository.findByQuestionId(anyLong())).thenReturn(Data.QUESTIONS);
         doAnswer(invocation -> {
             Long id = invocation.getArgument(0);
             return id == 5l ? Data.QUESTIONS : Collections.EMPTY_LIST;
@@ -218,5 +225,17 @@ class ExamServiceImplTest {
 
         verify(questionRepository).findByQuestionId(anyLong());
 
+    }
+
+    @Test
+    void testDoCallRealMethod() {
+        when(examRepository.findAll()).thenReturn(Data.EXAMS);
+       // when(questionRepository.findByQuestionId(anyLong())).thenReturn(Data.QUESTIONS);
+
+        doCallRealMethod().when(questionRepositoryImpl).findByQuestionId(anyLong());
+        Exam exam = examService.findExamByNameWithQuestions("matematica");
+
+        assertEquals(5l, exam.getId());
+        assertEquals("matematica", exam.getName());
     }
 }
