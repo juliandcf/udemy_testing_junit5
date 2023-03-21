@@ -119,4 +119,16 @@ class ExamServiceImplTest {
         assertEquals(1l, exam1.getId());
         assertEquals(2l, exam2.getId());
     }
+
+    @Test
+    void testIdExamNullHandlerException() {
+        when(examRepository.findAll()).thenReturn(Data.EXAMS_ID_NULL);
+        when(questionRepository.findByQuestionId(isNull())).thenThrow(IllegalArgumentException.class);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            examService.findExamByNameWithQuestions("matematica");
+        });
+        assertEquals(IllegalArgumentException.class, exception.getClass());
+        verify(examRepository).findAll();
+        verify(questionRepository).findByQuestionId(null);
+    }
 }
