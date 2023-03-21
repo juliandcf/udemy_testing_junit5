@@ -131,4 +131,14 @@ class ExamServiceImplTest {
         verify(examRepository).findAll();
         verify(questionRepository).findByQuestionId(null);
     }
+
+    @Test
+    void testArgumentMatchers() {
+        when(examRepository.findAll()).thenReturn(Data.EXAMS);
+        when(questionRepository.findByQuestionId(anyLong())).thenReturn(Data.QUESTIONS);
+        examService.findExamByNameWithQuestions("matematica");
+
+        verify(examRepository).findAll();
+        verify(questionRepository).findByQuestionId(argThat(arg -> arg != null && arg.equals(5l)));
+    }
 }
