@@ -235,4 +235,28 @@ class ExamServiceImplTest {
         assertEquals("matematica", exam.getName());
     }
 
+    @Test
+    void testInvocationOrder() {
+        when(examRepository.findAll()).thenReturn(Data.EXAMS);
+
+        examService.findExamByNameWithQuestions("matematica");
+        examService.findExamByNameWithQuestions("Lengua");
+        InOrder inOrder = inOrder(questionRepository);
+        inOrder.verify(questionRepository).findByQuestionId(5l);
+        inOrder.verify(questionRepository).findByQuestionId(6l);
+    }
+
+    @Test
+    void testMulitpleInvocationOrder() {
+        when(examRepository.findAll()).thenReturn(Data.EXAMS);
+
+        examService.findExamByNameWithQuestions("matematica");
+        examService.findExamByNameWithQuestions("Lengua");
+
+        InOrder inOrder = inOrder(examRepository, questionRepository);
+        inOrder.verify(examRepository).findAll();
+        inOrder.verify(questionRepository).findByQuestionId(5l);
+        inOrder.verify(examRepository).findAll();
+        inOrder.verify(questionRepository).findByQuestionId(6l);
+    }
 }
