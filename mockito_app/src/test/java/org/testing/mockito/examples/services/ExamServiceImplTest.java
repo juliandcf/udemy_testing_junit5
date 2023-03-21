@@ -201,4 +201,22 @@ class ExamServiceImplTest {
             examService.save(Data.EXAM_WITH_QUESTIONS);
         });
     }
+
+    @Test
+    void testDoAnswer() {
+        when(examRepository.findAll()).thenReturn(Data.EXAMS);
+        //  when(questionRepository.findByQuestionId(anyLong())).thenReturn(Data.QUESTIONS);
+        doAnswer(invocation -> {
+            Long id = invocation.getArgument(0);
+            return id == 5l ? Data.QUESTIONS : Collections.EMPTY_LIST;
+        }).when(questionRepository).findByQuestionId(anyLong());
+
+        Exam exam = examService.findExamByNameWithQuestions("matematica");
+        assertEquals(5, exam.getQuestions().size());
+        assertEquals(5l, exam.getId());
+        assertEquals("matematica", exam.getName());
+
+        verify(questionRepository).findByQuestionId(anyLong());
+
+    }
 }
