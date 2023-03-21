@@ -3,6 +3,8 @@ package org.testing.mockito.examples.services;
 import org.apache.commons.lang.SerializationUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatcher;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -140,5 +142,33 @@ class ExamServiceImplTest {
 
         verify(examRepository).findAll();
         verify(questionRepository).findByQuestionId(argThat(arg -> arg != null && arg.equals(5l)));
+    }
+
+    @Test
+    void testArgumentMatchersCustom() {
+        //Descomentar para ver el error personalizado
+        // when(examRepository.findAll()).thenReturn(Data.EXAMS_ID_NEGATIVE);
+        when(examRepository.findAll()).thenReturn(Data.EXAMS);
+        when(questionRepository.findByQuestionId(anyLong())).thenReturn(Data.QUESTIONS);
+        examService.findExamByNameWithQuestions("matematica");
+
+        verify(examRepository).findAll();
+        verify(questionRepository).findByQuestionId(argThat(new MyArgsMatchers()));
+    }
+
+    public static class MyArgsMatchers implements ArgumentMatcher<Long> {
+
+        Long argument;
+
+        @Override
+        public boolean matches(Long argument) {
+            this.argument = argument;
+            return argument != null && argument > 0;
+        }
+
+        @Override
+        public String toString() {
+            return "El id debe ser distinto de null y un valor positivo. El valor fue " + argument;
+        }
     }
 }
