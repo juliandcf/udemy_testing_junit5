@@ -3,10 +3,7 @@ package org.testing.mockito.examples.services;
 import org.apache.commons.lang.SerializationUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatcher;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
@@ -33,6 +30,9 @@ class ExamServiceImplTest {
 
     @InjectMocks
     ExamServiceImpl examService;
+
+    @Captor
+    ArgumentCaptor<Long> captorVariable;
 
     @Test
     void testFindExamByName() {
@@ -170,5 +170,26 @@ class ExamServiceImplTest {
         public String toString() {
             return "El id debe ser distinto de null y un valor positivo. El valor fue " + argument;
         }
+    }
+
+    @Test
+    void testArgumentCaptor() {
+        when(examRepository.findAll()).thenReturn(Data.EXAMS);
+        examService.findExamByNameWithQuestions("matematica");
+
+        ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
+        verify(questionRepository).findByQuestionId(captor.capture());
+
+        assertEquals(5l, captor.getValue());
+    }
+
+    @Test
+    void testArgumentCaptorWithAnnotation() {
+        when(examRepository.findAll()).thenReturn(Data.EXAMS);
+        examService.findExamByNameWithQuestions("matematica");
+
+        verify(questionRepository).findByQuestionId(captorVariable.capture());
+
+        assertEquals(5l, captorVariable.getValue());
     }
 }
