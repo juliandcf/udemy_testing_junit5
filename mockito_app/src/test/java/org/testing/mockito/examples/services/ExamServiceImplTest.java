@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.testing.mockito.examples.models.Exam;
 import org.testing.mockito.examples.repositories.ExamRepository;
-import org.testing.mockito.examples.repositories.ExamRepositoryImpl;
 import org.testing.mockito.examples.repositories.QuestionRepository;
 import org.testing.mockito.examples.repositories.QuestionRepositoryImpl;
 import org.testing.mockito.examples.utils.Data;
@@ -26,9 +25,6 @@ class ExamServiceImplTest {
 
     @Mock
     ExamRepository examRepository;
-
-    @Mock
-    ExamRepositoryImpl examRepositoryImpl;
 
     @Mock
     QuestionRepository questionRepository;
@@ -230,7 +226,7 @@ class ExamServiceImplTest {
     @Test
     void testDoCallRealMethod() {
         when(examRepository.findAll()).thenReturn(Data.EXAMS);
-       // when(questionRepository.findByQuestionId(anyLong())).thenReturn(Data.QUESTIONS);
+        // when(questionRepository.findByQuestionId(anyLong())).thenReturn(Data.QUESTIONS);
 
         doCallRealMethod().when(questionRepositoryImpl).findByQuestionId(anyLong());
         Exam exam = examService.findExamByNameWithQuestions("matematica");
@@ -238,4 +234,5 @@ class ExamServiceImplTest {
         assertEquals(5l, exam.getId());
         assertEquals("matematica", exam.getName());
     }
+
 }
