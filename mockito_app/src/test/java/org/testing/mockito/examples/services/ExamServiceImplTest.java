@@ -259,4 +259,25 @@ class ExamServiceImplTest {
         inOrder.verify(examRepository).findAll();
         inOrder.verify(questionRepository).findByQuestionId(6l);
     }
+
+    @Test
+    void testCountInvotations() {
+        when(examRepository.findAll()).thenReturn(Data.EXAMS);
+
+        examService.findExamByNameWithQuestions("matematica");
+        verify(questionRepository, times(1)).findByQuestionId(5l);
+        verify(questionRepository, atLeast(1)).findByQuestionId(5l);
+        verify(questionRepository, atLeastOnce()).findByQuestionId(5l);
+        verify(questionRepository, atMost(10)).findByQuestionId(5l);
+        verify(questionRepository, atMostOnce()).findByQuestionId(5l);
+    }
+
+    @Test
+    void testCountInvotationsNever() {
+        when(examRepository.findAll()).thenReturn(Data.EXAMS);
+
+        examService.findExamByNameWithQuestions("Fisica");
+        verify(questionRepository, never()).findByQuestionId(5l);
+        verifyNoInteractions(questionRepository);
+    }
 }
