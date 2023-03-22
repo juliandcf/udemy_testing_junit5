@@ -12,5 +12,5 @@ public interface AccountService {
 
     BigDecimal checkBalance(Long accountId);
 
-    void transfer(Long sourceAccountId, Long destinationAccountId, BigDecimal amount);
+    void transfer(Long sourceAccountId, Long destinationAccountId, BigDecimal amount, Long bankId);
 }
