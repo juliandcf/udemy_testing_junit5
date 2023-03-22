@@ -2,8 +2,6 @@ package org.testing.springboot.app;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -13,7 +11,6 @@ import org.testing.springboot.app.models.Bank;
 import org.testing.springboot.app.repositories.AccountRepository;
 import org.testing.springboot.app.repositories.BankRepository;
 import org.testing.springboot.app.services.AccountService;
-import org.testing.springboot.app.services.AccountServiceImpl;
 import org.testing.springboot.app.utils.Data;
 
 import java.math.BigDecimal;
@@ -24,96 +21,96 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class SpringbootTestApplicationTests {
 
-	@MockBean
-	AccountRepository accountRepository;
+    @MockBean
+    AccountRepository accountRepository;
 
-	@MockBean
-	BankRepository bankRepository;
+    @MockBean
+    BankRepository bankRepository;
 
-	@Autowired
-	AccountService accountService;
+    @Autowired
+    AccountService accountService;
 
-	@BeforeEach
-	void setUp() {
+    @BeforeEach
+    void setUp() {
 
-	}
+    }
 
-	@Test
-	void contextLoads() {
-		when(accountRepository.findById(1l)).thenReturn(Data.createAccount001());
-		when(accountRepository.findById(2l)).thenReturn(Data.createAccount002());
-		when(bankRepository.findById(1l)).thenReturn(Data.createBank());
+    @Test
+    void contextLoads() {
+        when(accountRepository.findById(1l)).thenReturn(Data.createAccount001());
+        when(accountRepository.findById(2l)).thenReturn(Data.createAccount002());
+        when(bankRepository.findById(1l)).thenReturn(Data.createBank());
 
-		BigDecimal balanceSource = accountService.checkBalance(1l);
-		BigDecimal balanceDestination = accountService.checkBalance(2l);
+        BigDecimal balanceSource = accountService.checkBalance(1l);
+        BigDecimal balanceDestination = accountService.checkBalance(2l);
 
-		assertEquals("1000", balanceSource.toPlainString());
-		assertEquals("2000", balanceDestination.toPlainString());
+        assertEquals("1000", balanceSource.toPlainString());
+        assertEquals("2000", balanceDestination.toPlainString());
 
-		accountService.transfer(1l, 2l, new BigDecimal("100"), 1l);
+        accountService.transfer(1l, 2l, new BigDecimal("100"), 1l);
 
-		balanceSource = accountService.checkBalance(1l);
-		balanceDestination = accountService.checkBalance(2l);
+        balanceSource = accountService.checkBalance(1l);
+        balanceDestination = accountService.checkBalance(2l);
 
-		assertEquals("900", balanceSource.toPlainString());
-		assertEquals("2100", balanceDestination.toPlainString());
+        assertEquals("900", balanceSource.toPlainString());
+        assertEquals("2100", balanceDestination.toPlainString());
 
-		int total = accountService.checkTotalTransfers(1l);
-		assertEquals(1, total);
+        int total = accountService.checkTotalTransfers(1l);
+        assertEquals(1, total);
 
-		verify(accountRepository, times(3)).findById(1l);
-		verify(accountRepository, times(3)).findById(2l);
-		verify(accountRepository, times(2)).update(any(Account.class));
+        verify(accountRepository, times(3)).findById(1l);
+        verify(accountRepository, times(3)).findById(2l);
+        verify(accountRepository, times(2)).update(any(Account.class));
 
-		verify(bankRepository, times(2)).findById(1l);
-		verify(bankRepository).update(any(Bank.class));
+        verify(bankRepository, times(2)).findById(1l);
+        verify(bankRepository).update(any(Bank.class));
 
-		verify(accountRepository, times(6)).findById(anyLong());
-		verify(accountRepository, never()).findAll();
-	}
+        verify(accountRepository, times(6)).findById(anyLong());
+        verify(accountRepository, never()).findAll();
+    }
 
-	@Test
-	void contextLoads2() {
-		when(accountRepository.findById(1l)).thenReturn(Data.createAccount001());
-		when(accountRepository.findById(2l)).thenReturn(Data.createAccount002());
-		when(bankRepository.findById(1l)).thenReturn(Data.createBank());
+    @Test
+    void contextLoads2() {
+        when(accountRepository.findById(1l)).thenReturn(Data.createAccount001());
+        when(accountRepository.findById(2l)).thenReturn(Data.createAccount002());
+        when(bankRepository.findById(1l)).thenReturn(Data.createBank());
 
-		BigDecimal balanceSource = accountService.checkBalance(1l);
-		BigDecimal balanceDestination = accountService.checkBalance(2l);
+        BigDecimal balanceSource = accountService.checkBalance(1l);
+        BigDecimal balanceDestination = accountService.checkBalance(2l);
 
-		assertEquals("1000", balanceSource.toPlainString());
-		assertEquals("2000", balanceDestination.toPlainString());
+        assertEquals("1000", balanceSource.toPlainString());
+        assertEquals("2000", balanceDestination.toPlainString());
 
-		assertThrows(NotEnoughMoneyException.class, () -> {
-			accountService.transfer(1l, 2l, new BigDecimal("1200"), 1l);
-		});
+        assertThrows(NotEnoughMoneyException.class, () -> {
+            accountService.transfer(1l, 2l, new BigDecimal("1200"), 1l);
+        });
 
-		balanceSource = accountService.checkBalance(1l);
-		balanceDestination = accountService.checkBalance(2l);
+        balanceSource = accountService.checkBalance(1l);
+        balanceDestination = accountService.checkBalance(2l);
 
-		assertEquals("1000", balanceSource.toPlainString());
-		assertEquals("2000", balanceDestination.toPlainString());
+        assertEquals("1000", balanceSource.toPlainString());
+        assertEquals("2000", balanceDestination.toPlainString());
 
-		int total = accountService.checkTotalTransfers(1l);
-		assertEquals(0, total);
+        int total = accountService.checkTotalTransfers(1l);
+        assertEquals(0, total);
 
-		verify(accountRepository, times(3)).findById(1l);
-		verify(accountRepository, times(2)).findById(2l);
-		verify(accountRepository, never()).update(any(Account.class));
+        verify(accountRepository, times(3)).findById(1l);
+        verify(accountRepository, times(2)).findById(2l);
+        verify(accountRepository, never()).update(any(Account.class));
 
-		verify(bankRepository).findById(1l);
-		verify(bankRepository, never()).update(any(Bank.class));
-	}
+        verify(bankRepository).findById(1l);
+        verify(bankRepository, never()).update(any(Bank.class));
+    }
 
-	@Test
-	void contextLoads3() {
-		when(accountRepository.findById(1l)).thenReturn(Data.createAccount001());
+    @Test
+    void contextLoads3() {
+        when(accountRepository.findById(1l)).thenReturn(Data.createAccount001());
 
-		Account account1 = accountService.findById(1l);
-		Account account2 = accountService.findById(1l);
+        Account account1 = accountService.findById(1l);
+        Account account2 = accountService.findById(1l);
 
-		assertSame(account1, account2);
-		verify(accountRepository, times(2)).findById(anyLong());
+        assertSame(account1, account2);
+        verify(accountRepository, times(2)).findById(anyLong());
 
-	}
+    }
 }
