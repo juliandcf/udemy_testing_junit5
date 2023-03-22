@@ -1,5 +1,6 @@
 package org.testing.springboot.app.services;
 
+import org.springframework.stereotype.Service;
 import org.testing.springboot.app.models.Account;
 import org.testing.springboot.app.models.Bank;
 import org.testing.springboot.app.repositories.AccountRepository;
@@ -7,6 +8,7 @@ import org.testing.springboot.app.repositories.BankRepository;
 
 import java.math.BigDecimal;
 
+@Service
 public class AccountServiceImpl implements AccountService {
 
     private AccountRepository accountRepository;

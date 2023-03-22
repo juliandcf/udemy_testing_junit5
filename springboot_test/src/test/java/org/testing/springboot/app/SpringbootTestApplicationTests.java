@@ -4,7 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.testing.springboot.app.exceptions.NotEnoughMoneyException;
 import org.testing.springboot.app.models.Account;
 import org.testing.springboot.app.models.Bank;
@@ -22,14 +24,14 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class SpringbootTestApplicationTests {
 
-	@Mock
+	@MockBean
 	AccountRepository accountRepository;
 
-	@Mock
+	@MockBean
 	BankRepository bankRepository;
 
-	@InjectMocks
-	AccountServiceImpl accountService;
+	@Autowired
+	AccountService accountService;
 
 	@BeforeEach
 	void setUp() {
