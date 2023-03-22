@@ -65,6 +65,9 @@ class SpringbootTestApplicationTests {
 
 		verify(bankRepository, times(2)).findById(1l);
 		verify(bankRepository).update(any(Bank.class));
+
+		verify(accountRepository, times(6)).findById(anyLong());
+		verify(accountRepository, never()).findAll();
 	}
 
 	@Test
@@ -100,4 +103,15 @@ class SpringbootTestApplicationTests {
 		verify(bankRepository, never()).update(any(Bank.class));
 	}
 
+	@Test
+	void contextLoads3() {
+		when(accountRepository.findById(1l)).thenReturn(Data.createAccount001());
+
+		Account account1 = accountService.findById(1l);
+		Account account2 = accountService.findById(1l);
+
+		assertSame(account1, account2);
+		verify(accountRepository, times(2)).findById(anyLong());
+
+	}
 }
