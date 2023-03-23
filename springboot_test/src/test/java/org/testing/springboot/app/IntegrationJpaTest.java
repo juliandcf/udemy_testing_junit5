@@ -7,6 +7,7 @@ import org.testing.springboot.app.models.Account;
 import org.testing.springboot.app.repositories.AccountRepository;
 import org.testing.springboot.app.repositories.BankRepository;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,5 +36,15 @@ public class IntegrationJpaTest {
         assertTrue(account.isPresent());
         assertEquals("Andrés", account.get().getPerson());
         assertEquals("1000.00", account.get().getBalance().toPlainString());
+    }
+
+    @Test
+    void testSave() {
+        Account account = new Account(null, "pepe", new BigDecimal("3000"));
+        accountRepository.save(account);
+
+        Account accountPepe = accountRepository.findByPerson("pepe").orElseThrow();
+        assertEquals("pepe", accountPepe.getPerson());
+        assertEquals(3l, accountPepe.getId());
     }
 }
