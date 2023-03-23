@@ -1,12 +1,22 @@
 package org.testing.springboot.app.models;
 
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
+@Entity
 public class Bank {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
     private int totalTransfers;
+
+    public Bank() {
+        super();
+    }
 
     public Bank(Long id, String name, int totalTransfers) {
         this.id = id;

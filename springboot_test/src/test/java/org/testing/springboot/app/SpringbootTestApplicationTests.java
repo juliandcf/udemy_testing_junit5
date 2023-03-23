@@ -14,6 +14,7 @@ import org.testing.springboot.app.services.AccountService;
 import org.testing.springboot.app.utils.Data;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -37,9 +38,9 @@ class SpringbootTestApplicationTests {
 
     @Test
     void contextLoads() {
-        when(accountRepository.findById(1l)).thenReturn(Data.createAccount001());
-        when(accountRepository.findById(2l)).thenReturn(Data.createAccount002());
-        when(bankRepository.findById(1l)).thenReturn(Data.createBank());
+        when(accountRepository.findById(1l)).thenReturn(Optional.of(Data.createAccount001()));
+        when(accountRepository.findById(2l)).thenReturn(Optional.of(Data.createAccount002()));
+        when(bankRepository.findById(1l)).thenReturn(Optional.of(Data.createBank()));
 
         BigDecimal balanceSource = accountService.checkBalance(1l);
         BigDecimal balanceDestination = accountService.checkBalance(2l);
@@ -60,10 +61,10 @@ class SpringbootTestApplicationTests {
 
         verify(accountRepository, times(3)).findById(1l);
         verify(accountRepository, times(3)).findById(2l);
-        verify(accountRepository, times(2)).update(any(Account.class));
+        verify(accountRepository, times(2)).save(any(Account.class));
 
         verify(bankRepository, times(2)).findById(1l);
-        verify(bankRepository).update(any(Bank.class));
+        verify(bankRepository).save(any(Bank.class));
 
         verify(accountRepository, times(6)).findById(anyLong());
         verify(accountRepository, never()).findAll();
@@ -71,9 +72,9 @@ class SpringbootTestApplicationTests {
 
     @Test
     void contextLoads2() {
-        when(accountRepository.findById(1l)).thenReturn(Data.createAccount001());
-        when(accountRepository.findById(2l)).thenReturn(Data.createAccount002());
-        when(bankRepository.findById(1l)).thenReturn(Data.createBank());
+        when(accountRepository.findById(1l)).thenReturn(Optional.of(Data.createAccount001()));
+        when(accountRepository.findById(2l)).thenReturn(Optional.of(Data.createAccount002()));
+        when(bankRepository.findById(1l)).thenReturn(Optional.of(Data.createBank()));
 
         BigDecimal balanceSource = accountService.checkBalance(1l);
         BigDecimal balanceDestination = accountService.checkBalance(2l);
@@ -96,15 +97,15 @@ class SpringbootTestApplicationTests {
 
         verify(accountRepository, times(3)).findById(1l);
         verify(accountRepository, times(2)).findById(2l);
-        verify(accountRepository, never()).update(any(Account.class));
+        verify(accountRepository, never()).save(any(Account.class));
 
         verify(bankRepository).findById(1l);
-        verify(bankRepository, never()).update(any(Bank.class));
+        verify(bankRepository, never()).save(any(Bank.class));
     }
 
     @Test
     void contextLoads3() {
-        when(accountRepository.findById(1l)).thenReturn(Data.createAccount001());
+        when(accountRepository.findById(1l)).thenReturn(Optional.of(Data.createAccount001()));
 
         Account account1 = accountService.findById(1l);
         Account account2 = accountService.findById(1l);

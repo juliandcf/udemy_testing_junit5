@@ -1,15 +1,23 @@
 package org.testing.springboot.app.models;
 
+import jakarta.persistence.*;
 import org.testing.springboot.app.exceptions.NotEnoughMoneyException;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Entity
 public class Account {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String person;
     private BigDecimal balance;
+
+    public Account() {
+        super();
+    }
 
     public Account(Long id, String person, BigDecimal balance) {
         this.id = id;

@@ -1,16 +1,11 @@
 package org.testing.springboot.app.repositories;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.testing.springboot.app.models.Account;
 
-import java.util.List;
+import java.util.Optional;
 
-public interface AccountRepository {
+public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    List<Account> findAll();
-
-    Account findById(Long id);
-
-    void update(Account account);
-
-
+    Optional<Account> findByPerson(String person);
 }
