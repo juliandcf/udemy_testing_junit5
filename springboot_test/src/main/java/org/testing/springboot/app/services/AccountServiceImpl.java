@@ -1,6 +1,7 @@
 package org.testing.springboot.app.services;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.testing.springboot.app.models.Account;
 import org.testing.springboot.app.models.Bank;
 import org.testing.springboot.app.repositories.AccountRepository;
@@ -21,23 +22,27 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Account findById(Long id) {
         return accountRepository.findById(id).orElseThrow();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int checkTotalTransfers(Long bankId) {
         Bank bank = bankRepository.findById(bankId).orElseThrow();
         return bank.getTotalTransfers();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BigDecimal checkBalance(Long accountId) {
         Account account = accountRepository.findById(accountId).orElseThrow();
         return account.getBalance();
     }
 
     @Override
+    @Transactional
     public void transfer(Long sourceAccountId, Long destinationAccountId, BigDecimal amount, Long bankId) {
         Account sourceAccount = accountRepository.findById(sourceAccountId).orElseThrow();
         sourceAccount.debit(amount);
