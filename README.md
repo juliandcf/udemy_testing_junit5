@@ -1,3 +1,6 @@
+![](docs/UC-9c1ceb03-94b4-4b8b-be02-301fdef3a02e.jpg)
+
+
 # Junit5/Mockito Course
 
 [Junit and mockito](https://www.udemy.com/course/curso-completo-junit-mockito-spring-boot-test/) course with the objective of improving TDD and BDD testing. 
