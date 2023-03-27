@@ -8,6 +8,7 @@ import org.testing.springboot.app.repositories.AccountRepository;
 import org.testing.springboot.app.repositories.BankRepository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -19,6 +20,18 @@ public class AccountServiceImpl implements AccountService {
     public AccountServiceImpl(AccountRepository accountRepository, BankRepository bankRepository) {
         this.accountRepository = accountRepository;
         this.bankRepository = bankRepository;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Account> findAll() {
+        return accountRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public Account save(Account account) {
+        return accountRepository.save(account);
     }
 
     @Override

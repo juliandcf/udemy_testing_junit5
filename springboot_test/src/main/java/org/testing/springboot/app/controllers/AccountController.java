@@ -11,6 +11,7 @@ import org.testing.springboot.app.services.AccountService;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -19,6 +20,18 @@ public class AccountController {
 
     @Autowired
     private AccountService accountService;
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<Account> list(){
+        return accountService.findAll();
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Account save(@RequestBody Account account){
+        return accountService.save(account);
+    }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -38,4 +51,5 @@ public class AccountController {
 
         return ResponseEntity.ok(response);
     }
+
 }

@@ -14,6 +14,8 @@ import org.testing.springboot.app.services.AccountService;
 import org.testing.springboot.app.utils.Data;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -114,4 +116,32 @@ class SpringbootTestApplicationTests {
         verify(accountRepository, times(2)).findById(anyLong());
 
     }
+
+    @Test
+    void testFindAll() {
+        List<Account> accounts = Arrays.asList(Data.createAccount001(), Data.createAccount002());
+        when(accountService.findAll()).thenReturn(accounts);
+        when(accountRepository.findAll()).thenReturn(accounts);
+
+        List<Account> response = accountService.findAll();
+
+        assertFalse(response.isEmpty());
+        assertEquals(2, response.size());
+
+        verify(accountRepository).findAll();
+    }
+
+    @Test
+    void testSave() {
+        Account account = new Account(null, "Pepe", new BigDecimal("3000"));
+        when(accountService.save(any())).thenReturn(account);
+
+        Account response = accountService.save(account);
+
+        assertNotNull(response);
+        assertEquals("Pepe", response.getPerson());
+        verify(accountRepository).save(any());
+    }
+
+
 }
