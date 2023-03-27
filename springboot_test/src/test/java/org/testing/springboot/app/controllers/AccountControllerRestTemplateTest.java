@@ -11,9 +11,12 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.testing.springboot.app.dtos.TransferDTO;
+import org.testing.springboot.app.models.Account;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -55,5 +58,14 @@ class AccountControllerRestTemplateTest {
         assertEquals(LocalDate.now().toString(), jsonNode.path("date").asText());
         assertEquals("100", jsonNode.path("transfer").path("amount").asText());
 
+    }
+
+    @Test
+    void testList(){
+        ResponseEntity<Account[]> response = client.getForEntity("/api/accounts", Account[].class);
+        List<Account> accounts = Arrays.asList(response.getBody());
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(2, accounts.size());
     }
 }
